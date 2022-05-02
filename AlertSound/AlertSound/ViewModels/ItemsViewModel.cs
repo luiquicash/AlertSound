@@ -11,21 +11,27 @@ namespace AlertSound.ViewModels
     public class ItemsViewModel : BaseViewModel
     {
         private Item _selectedItem;
-
+        private Item _updateItem;
+        private Item _deletedItem;
         public ObservableCollection<Item> Items { get; }
         public Command LoadItemsCommand { get; }
         public Command AddItemCommand { get; }
         public Command<Item> ItemTapped { get; }
-
+        public Command<Item> ItemDelete { get; }
+        public Command<Item> ItemUpdate { get; }
         public ItemsViewModel()
         {
-            Title = "Browse";
+            Title = "Lista de Alarmas";
             Items = new ObservableCollection<Item>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
 
             ItemTapped = new Command<Item>(OnItemSelected);
 
             AddItemCommand = new Command(OnAddItem);
+
+            ItemDelete = new Command<Item>(OnDeleteItem);
+
+            ItemUpdate = new Command<Item>(OnEditItem);
         }
 
         async Task ExecuteLoadItemsCommand()
@@ -55,6 +61,7 @@ namespace AlertSound.ViewModels
         {
             IsBusy = true;
             SelectedItem = null;
+            DeletedItem = null;
         }
 
         public Item SelectedItem
@@ -66,10 +73,45 @@ namespace AlertSound.ViewModels
                 OnItemSelected(value);
             }
         }
+        public Item UpdateItem
+        {
+            get => _updateItem;
+            set
+            {
+                SetProperty(ref _updateItem, value);
+                OnEditItem(value);
+            }
+        }
+        public Item DeletedItem
+        {
+            get => _deletedItem;
+            set
+            {
+                SetProperty(ref _selectedItem, value);
+                OnDeleteItem(value);
+            }
+        }
 
         private async void OnAddItem(object obj)
         {
             await Shell.Current.GoToAsync(nameof(NewItemPage));
+        }
+
+        private async void OnDeleteItem(Item item)
+        {
+            if (item == null)
+                return;
+
+            await DataStore.DeleteItemAsync(item.Id);
+            await ExecuteLoadItemsCommand();
+        }
+
+        private async void OnEditItem(Item item)
+        {
+            if (item == null)
+                return;
+
+            await Shell.Current.GoToAsync($"{nameof(EditItemPage)}?{nameof(EditItemViewModel.ItemId)}={item.Id}");
         }
 
         async void OnItemSelected(Item item)

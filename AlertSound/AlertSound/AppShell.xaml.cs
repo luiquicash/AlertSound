@@ -1,7 +1,5 @@
-﻿using AlertSound.ViewModels;
-using AlertSound.Views;
+﻿using AlertSound.Views;
 using System;
-using System.Collections.Generic;
 using Xamarin.Forms;
 
 namespace AlertSound

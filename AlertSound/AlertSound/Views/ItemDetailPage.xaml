@@ -5,10 +5,56 @@
              Title="{Binding Title}">
 
     <StackLayout Spacing="20" Padding="15">
-        <Label Text="Text:" FontSize="Medium" />
-        <Label Text="{Binding Text}" FontSize="Small"/>
-        <Label Text="Description:" FontSize="Medium" />
-        <Label Text="{Binding Description}" FontSize="Small"/>
+        <StackLayout Orientation="Horizontal">
+            <Label Text="Titulo del Evento:" FontSize="Medium"
+          HorizontalOptions="Start" VerticalOptions="Center"/>
+            <Label Text="{Binding Text}" FontSize="Small" HorizontalOptions="FillAndExpand"/>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <Label Text="Descripcion del Evento:" FontSize="Medium"
+          HorizontalOptions="Start" VerticalOptions="Center"/>
+            <Label Text="{Binding Description}" FontSize="Small" HorizontalOptions="FillAndExpand"/>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <Label Text="Sonido:" FontSize="Medium"
+          HorizontalOptions="Start" VerticalOptions="Center"/>
+            <Label Text="{Binding SoundSelected}" FontSize="Small" HorizontalOptions="FillAndExpand"/>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <Label Text="Fecha Inicial:" FontSize="Medium"
+          HorizontalOptions="Start" VerticalOptions="Center"/>
+            <Label Text="{Binding From}" FontSize="Small" HorizontalOptions="FillAndExpand"/>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <Label Text="Fecha Final:" FontSize="Medium"
+          HorizontalOptions="Start" VerticalOptions="Center"/>
+            <Label Text="{Binding To}" FontSize="Small" HorizontalOptions="FillAndExpand"/>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <Label Text="Hora del Evento:" FontSize="Medium"
+          HorizontalOptions="Start" VerticalOptions="Center"/>
+            <Label Text="{Binding Hour}" FontSize="Small" HorizontalOptions="FillAndExpand"/>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <Label Text="Estado del Evento:" FontSize="Medium"
+          HorizontalOptions="Start" VerticalOptions="Center"/>
+            <Label Text="{Binding StatusStr}" FontSize="Small" HorizontalOptions="FillAndExpand"/>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <Label Text="El Evento se Repetira?:" FontSize="Medium"
+          HorizontalOptions="Start" VerticalOptions="Center"/>
+            <Label Text="{Binding isEventRepeatStr}" FontSize="Small" HorizontalOptions="FillAndExpand"/>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <Label Text="Tipo:" FontSize="Medium"
+          HorizontalOptions="Start" VerticalOptions="Center"/>
+            <Label Text="{Binding RepeatEvent.QuantityType}" FontSize="Small" HorizontalOptions="FillAndExpand"/>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <Label Text="Cantidad:" FontSize="Medium"
+          HorizontalOptions="Start" VerticalOptions="Center"/>
+            <Label Text="{Binding RepeatEvent.Quantity}" FontSize="Small" HorizontalOptions="FillAndExpand"/>
+        </StackLayout>
     </StackLayout>
     
 </ContentPage>

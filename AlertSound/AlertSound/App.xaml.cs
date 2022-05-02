@@ -1,8 +1,5 @@
 ﻿using AlertSound.Services;
-using AlertSound.Views;
-using System;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace AlertSound
 {

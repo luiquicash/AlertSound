@@ -3,12 +3,12 @@ using Xamarin.Forms;
 
 namespace AlertSound.Views
 {
-    public partial class ItemDetailPage : ContentPage
+    public partial class EditItemPage : ContentPage
     {
-        public ItemDetailPage()
+        public EditItemPage()
         {
             InitializeComponent();
-            BindingContext = new ItemDetailViewModel();
+            BindingContext = new EditItemViewModel();
         }
     }
 }

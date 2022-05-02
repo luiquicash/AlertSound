@@ -1,7 +1,8 @@
 ﻿using AlertSound.Models;
-using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace AlertSound.Services
@@ -12,50 +13,54 @@ namespace AlertSound.Services
         public static List<Item> itemsList { get; set; }
         public MockDataStore()
         {
-            itemsList = items;
-            //items = new List<Item>()
-            //{
-            //    new Item { Id = Guid.NewGuid().ToString(), Text = "First item", Description="This is an item description." },
-            //    new Item { Id = Guid.NewGuid().ToString(), Text = "Second item", Description="This is an item description." },
-            //    new Item { Id = Guid.NewGuid().ToString(), Text = "Third item", Description="This is an item description." },
-            //    new Item { Id = Guid.NewGuid().ToString(), Text = "Fourth item", Description="This is an item description." },
-            //    new Item { Id = Guid.NewGuid().ToString(), Text = "Fifth item", Description="This is an item description." },
-            //    new Item { Id = Guid.NewGuid().ToString(), Text = "Sixth item", Description="This is an item description." }
-            //};
+            if (itemsList is null || itemsList.Count == 0)
+                itemsList = new List<Item>();
+
+            items = itemsList;
         }
 
         public async Task<bool> AddItemAsync(Item item)
         {
-            items.Add(item);
+            itemsList.Add(item);
 
             return await Task.FromResult(true);
         }
 
         public async Task<bool> UpdateItemAsync(Item item)
         {
-            var oldItem = items.Where((Item arg) => arg.Id == item.Id).FirstOrDefault();
-            items.Remove(oldItem);
-            items.Add(item);
+            var oldItem = itemsList.Where((Item arg) => arg.Id == item.Id).FirstOrDefault();
+            itemsList.Remove(oldItem);
+            itemsList.Add(item);
 
             return await Task.FromResult(true);
         }
 
         public async Task<bool> DeleteItemAsync(string id)
         {
-            var oldItem = items.Where((Item arg) => arg.Id == id).FirstOrDefault();
-            items.Remove(oldItem);
+            var oldItem = itemsList.Where((Item arg) => arg.Id == id).FirstOrDefault();
+            itemsList.Remove(oldItem);
 
             return await Task.FromResult(true);
         }
 
         public async Task<Item> GetItemAsync(string id)
         {
-            return await Task.FromResult(items.FirstOrDefault(s => s.Id == id));
+            return await Task.FromResult(itemsList.FirstOrDefault(s => s.Id == id));
         }
 
         public async Task<IEnumerable<Item>> GetItemsAsync(bool forceRefresh = false)
         {
-            return await Task.FromResult(items);
+            return await Task.FromResult(itemsList);
+        }
+
+        public async Task<bool> PlayAlarm(string soundName)
+        {
+            var assembly = typeof(App).GetTypeInfo().Assembly;
+            Stream audioStream = assembly.GetManifestResourceStream(soundName);
+            var audio = Plugin.SimpleAudioPlayer.CrossSimpleAudioPlayer.Current;
+            audio.Load(audioStream);
+            audio.Play();
+            return audio.IsPlaying;
         }
     }
 }

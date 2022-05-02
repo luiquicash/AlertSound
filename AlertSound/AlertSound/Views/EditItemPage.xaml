@@ -1,12 +1,10 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="AlertSound.Views.NewItemPage"
-             Shell.PresentationMode="ModalAnimated"
-             Title="Nueva Alarma"
-             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
-             ios:Page.UseSafeArea="true">
-    <ContentPage.Content>
+             x:Class="AlertSound.Views.EditItemPage"
+             Title="{Binding Title}">
+
+    <StackLayout Spacing="20" Padding="15">
         <StackLayout Spacing="3" Padding="15">
             <Label Text="Titulo del Evento" FontSize="Medium" />
             <Entry x:Name="Tittle" Text="{Binding Text, Mode=TwoWay}" FontSize="Medium" />
@@ -57,6 +55,6 @@
                 <Button Text="Save" Command="{Binding SaveCommand}" HorizontalOptions="FillAndExpand"></Button>
             </StackLayout>
         </StackLayout>
-    </ContentPage.Content>
+    </StackLayout>
     
 </ContentPage>

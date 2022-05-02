@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -6,11 +6,48 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2196" />  
-    <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
+    <None Remove="Sounds\Alarm_Fast_A1.mp3" />
+    <None Remove="Sounds\Alarm_Fast_High_Pitch_A1.mp3" />
+    <None Remove="Sounds\Alarm_Fast_High_Pitch_A2.mp3" />
+    <None Remove="Sounds\Alarm_Fast_High_Pitch_A3.mp3" />
+    <None Remove="Sounds\Alarm_Fast_High_Pitch_B1.mp3" />
+    <None Remove="Sounds\Alarm_Slow_A3.mp3" />
+    <None Remove="Sounds\Alarm_Slow_B1.mp3" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Sounds\" />
+    <EmbeddedResource Include="Sounds\Alarm_Fast_A1.mp3">
+      <CustomToolNamespace>AlertSound</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sounds\Alarm_Fast_High_Pitch_A1.mp3">
+      <CustomToolNamespace>AlertSound</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sounds\Alarm_Fast_High_Pitch_A2.mp3">
+      <CustomToolNamespace>AlertSound</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sounds\Alarm_Fast_High_Pitch_A3.mp3">
+      <CustomToolNamespace>AlertSound</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sounds\Alarm_Fast_High_Pitch_B1.mp3">
+      <CustomToolNamespace>AlertSound</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sounds\Alarm_Slow_A3.mp3">
+      <CustomToolNamespace>AlertSound</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sounds\Alarm_Slow_B1.mp3">
+      <CustomToolNamespace>AlertSound</CustomToolNamespace>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Xam.Plugin.SimpleAudioPlayer" Version="1.6.0" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2401" />  
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\EditItemPage.xaml.cs">
+      <DependentUpon>EditItemPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
