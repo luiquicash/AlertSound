@@ -1,8 +1,6 @@
 ﻿using AlertSound.Models;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace AlertSound.Services
@@ -51,16 +49,6 @@ namespace AlertSound.Services
         public async Task<IEnumerable<Item>> GetItemsAsync(bool forceRefresh = false)
         {
             return await Task.FromResult(itemsList);
-        }
-
-        public async Task<bool> PlayAlarm(string soundName)
-        {
-            var assembly = typeof(App).GetTypeInfo().Assembly;
-            Stream audioStream = assembly.GetManifestResourceStream(soundName);
-            var audio = Plugin.SimpleAudioPlayer.CrossSimpleAudioPlayer.Current;
-            audio.Load(audioStream);
-            audio.Play();
-            return audio.IsPlaying;
         }
     }
 }

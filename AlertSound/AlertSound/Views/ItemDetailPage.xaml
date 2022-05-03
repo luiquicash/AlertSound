@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AlertSound.Views.ItemDetailPage"
-             Title="{Binding Title}">
+             Title="Detalles de Alarma">
 
     <StackLayout Spacing="20" Padding="15">
         <StackLayout Orientation="Horizontal">
@@ -45,16 +45,16 @@
           HorizontalOptions="Start" VerticalOptions="Center"/>
             <Label Text="{Binding isEventRepeatStr}" FontSize="Small" HorizontalOptions="FillAndExpand"/>
         </StackLayout>
-        <StackLayout Orientation="Horizontal">
+        <StackLayout Orientation="Horizontal" IsVisible="{Binding isEventRepeat}">
             <Label Text="Tipo:" FontSize="Medium"
           HorizontalOptions="Start" VerticalOptions="Center"/>
             <Label Text="{Binding RepeatEvent.QuantityType}" FontSize="Small" HorizontalOptions="FillAndExpand"/>
         </StackLayout>
-        <StackLayout Orientation="Horizontal">
+        <StackLayout Orientation="Horizontal" IsVisible="{Binding isEventRepeat}">
             <Label Text="Cantidad:" FontSize="Medium"
           HorizontalOptions="Start" VerticalOptions="Center"/>
             <Label Text="{Binding RepeatEvent.Quantity}" FontSize="Small" HorizontalOptions="FillAndExpand"/>
         </StackLayout>
     </StackLayout>
-    
+
 </ContentPage>

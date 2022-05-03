@@ -6,6 +6,7 @@
              Title="Nueva Alarma"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              ios:Page.UseSafeArea="true">
+
     <ContentPage.Content>
         <StackLayout Spacing="3" Padding="15">
             <Label Text="Titulo del Evento" FontSize="Medium" />
@@ -24,7 +25,7 @@
             <Entry x:Name="Description" Text="{Binding Description, Mode=TwoWay}" FontSize="Medium" />
 
             <Label Text="Sonido" FontSize="Medium" />
-            <Picker x:Name="SoundSelected" Title="Selectionar Sonido" SelectedItem="{Binding SoundSelected}" >
+            <Picker x:Name="SoundSelected" Title="Selectionar Sonido" SelectedItem="{Binding SoundSelected}" SelectedIndex="{Binding IndexSound}" >
                 <Picker.Items>
                     <x:String>sound1</x:String>
                     <x:String>sound2</x:String>
@@ -35,28 +36,30 @@
                     <x:String>sound7</x:String>
                 </Picker.Items>
             </Picker>
+            <Button x:Name="PlayButton" BackgroundColor="Green" Text="Reproducir Alarma" Command="{Binding PlayCommand}" HorizontalOptions="FillAndExpand" IsVisible="{Binding isPlayButtonVisible}"></Button>
+            <Button x:Name="StopButton" BackgroundColor="Red" Text="Detener Alarma" Command="{Binding StopCommand}" HorizontalOptions="FillAndExpand" IsVisible="{Binding isStopButtonVisible}"></Button>
             <StackLayout Orientation="Horizontal">
                 <Label Text="Repetir el Evento?" FontSize="Medium" HorizontalOptions="Start" VerticalOptions="Center"/>
                 <CheckBox IsChecked="{Binding isEventRepeat}" HorizontalOptions="FillAndExpand"></CheckBox>
             </StackLayout>
-
-            <Label Text="Tipo de Cantidad" FontSize="Medium" />
-            <Picker x:Name="SelectQuantityType" Title="Selectionar Tipo de Cantidad" SelectedItem="{Binding QuantityType}" >
-                <Picker.Items>
-                    <x:String>Dias</x:String>
-                    <x:String>Semanas</x:String>
-                    <x:String>Meses</x:String>
-                    <x:String>Años</x:String>
-                </Picker.Items>
-            </Picker>
-            <Label Text="Cantidad" FontSize="Medium" />
-            <Entry x:Name="Quantity" Text="{Binding Quantity}" FontSize="Medium" Keyboard="Numeric"/>
-
+            <StackLayout IsVisible="{Binding isEventRepeat}">
+                <Label Text="Tipo de Cantidad" FontSize="Medium" />
+                <Picker x:Name="SelectQuantityType" Title="Selectionar Tipo de Cantidad" SelectedItem="{Binding QuantityType}" SelectedIndex="{Binding IndexQuantity}" >
+                    <Picker.Items>
+                        <x:String>Dias</x:String>
+                        <x:String>Semanas</x:String>
+                        <x:String>Meses</x:String>
+                        <x:String>Años</x:String>
+                    </Picker.Items>
+                </Picker>
+                <Label Text="Cantidad" FontSize="Medium" />
+                <Entry x:Name="Quantity" Text="{Binding Quantity}" FontSize="Medium" Keyboard="Numeric"/>
+            </StackLayout>
             <StackLayout Orientation="Horizontal">
                 <Button Text="Cancel" Command="{Binding CancelCommand}" HorizontalOptions="FillAndExpand"></Button>
                 <Button Text="Save" Command="{Binding SaveCommand}" HorizontalOptions="FillAndExpand"></Button>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>
-    
+
 </ContentPage>
