@@ -1,11 +1,6 @@
-﻿using AlertSound.Models;
-using AlertSound.Models.Constants;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using Xamarin.Forms;
 
 namespace AlertSound.ViewModels
@@ -34,7 +29,6 @@ namespace AlertSound.ViewModels
         private int indexquantity;
 
         private string itemId;
-        private ItemRepeat repeatevent;
 
         public EditItemViewModel()
         {
@@ -134,11 +128,7 @@ namespace AlertSound.ViewModels
             get => isstopbuttonvisible;
             set => SetProperty(ref isstopbuttonvisible, value);
         }
-        public ItemRepeat RepeatEvent
-        {
-            get => repeatevent;
-            set => SetProperty(ref repeatevent, value);
-        }
+
         public DateTime FromMinimumDate { get; }
         public DateTime ToMinimumDate { get; set; }
 
@@ -147,59 +137,6 @@ namespace AlertSound.ViewModels
         public Command PlayCommand { get; }
         public Command StopCommand { get; }
 
-        private List<ItemQuantityType> GetSoundsList()
-        {
-            var db = new List<string>()
-            {
-                SoundsNameConstants.sound1,
-                SoundsNameConstants.sound2,
-                SoundsNameConstants.sound3,
-                SoundsNameConstants.sound4,
-                SoundsNameConstants.sound5,
-                SoundsNameConstants.sound6,
-                SoundsNameConstants.sound7
-            };
-
-            var sound = 1;
-            var root = "AlertSound.Sounds.";
-            var outputList = new List<ItemQuantityType>();
-            foreach (var item in db)
-            {
-                var newitem = new ItemQuantityType()
-                {
-                    Value = root + item,
-                    Name = "sound" + sound
-                };
-                outputList.Add(newitem);
-                sound++;
-            }
-            return outputList;
-        }
-        private List<ItemQuantityType> GetQuantityTypes()
-        {
-            var db = new List<string>()
-            {
-                QuantityTypeConstants.Days,
-                QuantityTypeConstants.Week,
-                QuantityTypeConstants.Month,
-                QuantityTypeConstants.Years
-            };
-
-            var outputList = new List<ItemQuantityType>();
-            var id = 0;
-            foreach (var item in db)
-            {
-                id++;
-                var newitem = new ItemQuantityType()
-                {
-                    Value = id.ToString(),
-                    Name = item
-                };
-                outputList.Add(newitem);
-            }
-
-            return outputList;
-        }
         private bool ValidateSave()
         {
             return !string.IsNullOrWhiteSpace(text);
@@ -211,7 +148,7 @@ namespace AlertSound.ViewModels
         }
         private async void OnUpdate()
         {
-            var item = await DataStore.GetItemAsync(itemId);
+            var item = await App.Data.GetEventAsync(itemId);
 
             item.Text = Text;
             item.From = From;
@@ -224,14 +161,11 @@ namespace AlertSound.ViewModels
 
             if (isEventRepeat)
             {
-                item.RepeatEvent = new ItemRepeat()
-                {
-                    Quantity = Quantity,
-                    QuantityType = QuantityType
-                };
+                item.Quantity = Quantity;
+                item.QuantityType = QuantityType;
             }
 
-            await DataStore.UpdateItemAsync(item);
+            await App.Data.UpdateEventAsync(item);
 
             // This will pop the current page off the navigation stack
             await Shell.Current.GoToAsync("..");
@@ -240,7 +174,7 @@ namespace AlertSound.ViewModels
         {
             try
             {
-                var item = await DataStore.GetItemAsync(itemId);
+                var item = await App.Data.GetEventAsync(itemId);
                 Id = item.Id;
                 Text = item.Text;
                 Description = item.Description;
@@ -248,13 +182,12 @@ namespace AlertSound.ViewModels
                 From = item.From;
                 To = item.To.Date;
                 EventHour = item.EventHour;
-                RepeatEvent = item.RepeatEvent;
                 isEventRepeat = item.isEventRepeat;
                 Status = item.Status;
-                Quantity = item.RepeatEvent.Quantity;
-                QuantityType = item.RepeatEvent.QuantityType;
+                Quantity = item.Quantity;
+                QuantityType = item.QuantityType;
                 IndexSound = GetIndexSoundByValue(item.SoundSelected);
-                IndexQuantity = GetIndexQuantityByValue(item.RepeatEvent.QuantityType);
+                IndexQuantity = GetIndexQuantityByValue(item.QuantityType);
             }
             catch (Exception)
             {
@@ -267,7 +200,7 @@ namespace AlertSound.ViewModels
                 return;
 
             var soundValue = GetSoundsByName(SoundSelected);
-            PlayAlarm(soundValue);
+            App.Data.PlayAlarm(soundValue);
             isPlayButtonVisible = false;
             isStopButtonVisible = true;
         }
@@ -277,30 +210,14 @@ namespace AlertSound.ViewModels
                 return;
 
             var soundValue = GetSoundsByName(SoundSelected);
-            StopAlarm(soundValue);
+            App.Data.StopAlarm(soundValue);
             isPlayButtonVisible = true;
             isStopButtonVisible = false;
-        }
-        private void PlayAlarm(string soundValue)
-        {
-            var assembly = typeof(App).GetTypeInfo().Assembly;
-            Stream audioStream = assembly.GetManifestResourceStream(soundValue);
-            var audio = Plugin.SimpleAudioPlayer.CrossSimpleAudioPlayer.Current;
-            audio.Load(audioStream);
-            audio.Play();
-        }
-        private void StopAlarm(string soundValue)
-        {
-            var assembly = typeof(App).GetTypeInfo().Assembly;
-            Stream audioStream = assembly.GetManifestResourceStream(soundValue);
-            var audio = Plugin.SimpleAudioPlayer.CrossSimpleAudioPlayer.Current;
-            audio.Load(audioStream);
-            audio.Stop();
         }
         private string GetSoundsByValue(string itemValue)
         {
             string output = string.Empty;
-            var response = GetSoundsList().FirstOrDefault(x => x.Value == itemValue);
+            var response = App.Data.GetSoundsList().FirstOrDefault(x => x.Value == itemValue);
             if (response != null)
                 return response.Name;
             else
@@ -309,7 +226,7 @@ namespace AlertSound.ViewModels
         private string GetSoundsByName(string itemName)
         {
             string output = string.Empty;
-            var response = GetSoundsList().FirstOrDefault(x => x.Name == itemName);
+            var response = App.Data.GetSoundsList().FirstOrDefault(x => x.Name == itemName);
             if (response != null)
                 return response.Value;
             else
@@ -318,7 +235,7 @@ namespace AlertSound.ViewModels
         private int GetIndexSoundByValue(string itemValue)
         {
             int output = 0;
-            var index = GetSoundsList().Select(x => x.Value).ToList().FindIndex(a => a.Contains(itemValue));
+            var index = App.Data.GetSoundsList().Select(x => x.Value).ToList().FindIndex(a => a.Contains(itemValue));
             if (index > 0)
                 return index;
             else
@@ -327,7 +244,7 @@ namespace AlertSound.ViewModels
         private int GetIndexQuantityByValue(string itemName)
         {
             int output = 0;
-            var index = GetQuantityTypes().Select(x => x.Name).ToList().FindIndex(a => a.Contains(itemName));
+            var index = App.Data.GetQuantityTypes().Select(x => x.Name).ToList().FindIndex(a => a.Contains(itemName));
             if (index > 0)
                 return index;
             else

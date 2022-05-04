@@ -1,4 +1,4 @@
-﻿namespace AlertSound.Models.Constants
+﻿namespace AlertSound.Constants
 {
     public struct QuantityTypeConstants
     {

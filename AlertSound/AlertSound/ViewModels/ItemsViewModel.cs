@@ -10,28 +10,28 @@ namespace AlertSound.ViewModels
 {
     public class ItemsViewModel : BaseViewModel
     {
-        private Item _selectedItem;
-        private Item _updateItem;
-        private Item _deletedItem;
-        public ObservableCollection<Item> Items { get; }
+        private Events _selectedItem;
+        private Events _updateItem;
+        private Events _deletedItem;
+        public ObservableCollection<Events> Items { get; }
         public Command LoadItemsCommand { get; }
         public Command AddItemCommand { get; }
-        public Command<Item> ItemTapped { get; }
-        public Command<Item> ItemDelete { get; }
-        public Command<Item> ItemUpdate { get; }
+        public Command<Events> ItemTapped { get; }
+        public Command<Events> ItemDelete { get; }
+        public Command<Events> ItemUpdate { get; }
         public ItemsViewModel()
         {
             Title = "Lista de Alarmas";
-            Items = new ObservableCollection<Item>();
+            Items = new ObservableCollection<Events>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
 
-            ItemTapped = new Command<Item>(OnItemSelected);
+            ItemTapped = new Command<Events>(OnItemSelected);
 
             AddItemCommand = new Command(OnAddItem);
 
-            ItemDelete = new Command<Item>(OnDeleteItem);
+            ItemDelete = new Command<Events>(OnDeleteItem);
 
-            ItemUpdate = new Command<Item>(OnEditItem);
+            ItemUpdate = new Command<Events>(OnEditItem);
         }
 
         async Task ExecuteLoadItemsCommand()
@@ -41,7 +41,7 @@ namespace AlertSound.ViewModels
             try
             {
                 Items.Clear();
-                var items = await DataStore.GetItemsAsync(true);
+                var items = await App.Data.GetEventListsAsync(true);
                 foreach (var item in items)
                 {
                     Items.Add(item);
@@ -64,7 +64,7 @@ namespace AlertSound.ViewModels
             DeletedItem = null;
         }
 
-        public Item SelectedItem
+        public Events SelectedItem
         {
             get => _selectedItem;
             set
@@ -73,7 +73,7 @@ namespace AlertSound.ViewModels
                 OnItemSelected(value);
             }
         }
-        public Item UpdateItem
+        public Events UpdateItem
         {
             get => _updateItem;
             set
@@ -82,7 +82,7 @@ namespace AlertSound.ViewModels
                 OnEditItem(value);
             }
         }
-        public Item DeletedItem
+        public Events DeletedItem
         {
             get => _deletedItem;
             set
@@ -97,16 +97,16 @@ namespace AlertSound.ViewModels
             await Shell.Current.GoToAsync(nameof(NewItemPage));
         }
 
-        private async void OnDeleteItem(Item item)
+        private async void OnDeleteItem(Events item)
         {
             if (item == null)
                 return;
 
-            await DataStore.DeleteItemAsync(item.Id);
+            await App.Data.DeleteEventAsync(item.Id);
             await ExecuteLoadItemsCommand();
         }
 
-        private async void OnEditItem(Item item)
+        private async void OnEditItem(Events item)
         {
             if (item == null)
                 return;
@@ -114,7 +114,7 @@ namespace AlertSound.ViewModels
             await Shell.Current.GoToAsync($"{nameof(EditItemPage)}?{nameof(EditItemViewModel.ItemId)}={item.Id}");
         }
 
-        async void OnItemSelected(Item item)
+        async void OnItemSelected(Events item)
         {
             if (item == null)
                 return;

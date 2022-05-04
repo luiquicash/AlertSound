@@ -1,7 +1,4 @@
-﻿using AlertSound.Models;
-using AlertSound.Models.Constants;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
 using System.Linq;
 using Xamarin.Forms;
@@ -21,7 +18,8 @@ namespace AlertSound.ViewModels
         private TimeSpan hour;
         public string status;
         public string iseventrepeat;
-        public ItemRepeat repeatevent;
+        private int quantity;
+        private string quantityType;
 
         public string Id { get; set; }
         public string StatusStr
@@ -69,10 +67,15 @@ namespace AlertSound.ViewModels
             get => hour;
             set => SetProperty(ref hour, value);
         }
-        public ItemRepeat RepeatEvent
+        public int Quantity
         {
-            get => repeatevent;
-            set => SetProperty(ref repeatevent, value);
+            get => quantity;
+            set => SetProperty(ref quantity, value);
+        }
+        public string QuantityType
+        {
+            get => quantityType;
+            set => SetProperty(ref quantityType, value);
         }
         public string ItemId
         {
@@ -91,7 +94,7 @@ namespace AlertSound.ViewModels
         {
             try
             {
-                var item = await DataStore.GetItemAsync(itemId);
+                var item = await App.Data.GetEventAsync(itemId);
                 Id = item.Id;
                 Text = item.Text;
                 Description = item.Description;
@@ -99,8 +102,12 @@ namespace AlertSound.ViewModels
                 From = item.From;
                 To = item.To.Date;
                 Hour = item.EventHour;
-                RepeatEvent = item.RepeatEvent;
                 isEventRepeat = item.isEventRepeat;
+                if (item.isEventRepeat)
+                {
+                    Quantity = item.Quantity;
+                    QuantityType = item.QuantityType;
+                }
                 isEventRepeatStr = item.isEventRepeat ? "Si" : "No";
                 StatusStr = item.Status ? "Activo" : "InActivo";
             }
@@ -109,38 +116,11 @@ namespace AlertSound.ViewModels
                 Debug.WriteLine("Failed to Load Item");
             }
         }
-        private List<ItemQuantityType> GetSoundsList()
-        {
-            var db = new List<string>()
-            {
-                SoundsNameConstants.sound1,
-                SoundsNameConstants.sound2,
-                SoundsNameConstants.sound3,
-                SoundsNameConstants.sound4,
-                SoundsNameConstants.sound5,
-                SoundsNameConstants.sound6,
-                SoundsNameConstants.sound7
-            };
 
-            var sound = 1;
-            var root = "AlertSound.Sounds.";
-            var outputList = new List<ItemQuantityType>();
-            foreach (var item in db)
-            {
-                var newitem = new ItemQuantityType()
-                {
-                    Value = root + item,
-                    Name = "sound" + sound
-                };
-                outputList.Add(newitem);
-                sound++;
-            }
-            return outputList;
-        }
         private string GetSoundsByValue(string itemValue)
         {
             string output = string.Empty;
-            var response = GetSoundsList().FirstOrDefault(x => x.Value == itemValue);
+            var response = App.Data.GetSoundsList().FirstOrDefault(x => x.Value == itemValue);
             if (response != null)
                 return response.Name;
             else

@@ -48,12 +48,12 @@
         <StackLayout Orientation="Horizontal" IsVisible="{Binding isEventRepeat}">
             <Label Text="Tipo:" FontSize="Medium"
           HorizontalOptions="Start" VerticalOptions="Center"/>
-            <Label Text="{Binding RepeatEvent.QuantityType}" FontSize="Small" HorizontalOptions="FillAndExpand"/>
+            <Label Text="{Binding QuantityType}" FontSize="Small" HorizontalOptions="FillAndExpand"/>
         </StackLayout>
         <StackLayout Orientation="Horizontal" IsVisible="{Binding isEventRepeat}">
             <Label Text="Cantidad:" FontSize="Medium"
           HorizontalOptions="Start" VerticalOptions="Center"/>
-            <Label Text="{Binding RepeatEvent.Quantity}" FontSize="Small" HorizontalOptions="FillAndExpand"/>
+            <Label Text="{Binding Quantity}" FontSize="Small" HorizontalOptions="FillAndExpand"/>
         </StackLayout>
     </StackLayout>
 
