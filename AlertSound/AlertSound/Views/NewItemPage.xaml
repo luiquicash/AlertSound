@@ -9,22 +9,22 @@
 
     <ContentPage.Content>
         <StackLayout Spacing="3" Padding="15">
-            <Label Text="Titulo del Evento" FontSize="Medium" />
+            <Label Text="Titulo del Evento" FontSize="Medium" FontAttributes="Bold"/>
             <Entry x:Name="Tittle" Text="{Binding Text, Mode=TwoWay}" FontSize="Medium" />
 
-            <Label Text="Fecha Inicial" FontSize="Medium" />
+            <Label Text="Fecha Inicial" FontSize="Medium" FontAttributes="Bold"/>
             <DatePicker  x:Name="FromDatePicker" Date="{Binding From}" MinimumDate="{Binding FromMinimumDate}"></DatePicker>
 
-            <Label Text="Fecha Final" FontSize="Medium" />
+            <Label Text="Fecha Final" FontSize="Medium" FontAttributes="Bold"/>
             <DatePicker  x:Name="ToDatePicker" Date="{Binding To}"  MinimumDate="{Binding ToMinimumDate}"></DatePicker>
 
-            <Label Text="Hora del Evento" FontSize="Medium" />
+            <Label Text="Hora del Evento" FontSize="Medium" FontAttributes="Bold"/>
             <TimePicker Time="{Binding EventHour}" />
 
-            <Label Text="Descripcion del Evento" FontSize="Medium" />
+            <Label Text="Descripcion del Evento" FontSize="Medium" FontAttributes="Bold"/>
             <Entry x:Name="Description" Text="{Binding Description, Mode=TwoWay}" FontSize="Medium" />
 
-            <Label Text="Sonido" FontSize="Medium" />
+            <Label Text="Sonido" FontSize="Medium" FontAttributes="Bold"/>
             <Picker x:Name="SoundSelected" Title="Selectionar Sonido" SelectedItem="{Binding SoundSelected}" SelectedIndex="{Binding IndexSound}" >
                 <Picker.Items>
                     <x:String>sound1</x:String>
@@ -38,12 +38,13 @@
             </Picker>
             <Button x:Name="PlayButton" BackgroundColor="Green" Text="Reproducir Alarma" Command="{Binding PlayCommand}" HorizontalOptions="FillAndExpand" IsVisible="{Binding isPlayButtonVisible}"></Button>
             <Button x:Name="StopButton" BackgroundColor="Red" Text="Detener Alarma" Command="{Binding StopCommand}" HorizontalOptions="FillAndExpand" IsVisible="{Binding isStopButtonVisible}"></Button>
+            
             <StackLayout Orientation="Horizontal">
-                <Label Text="Repetir el Evento?" FontSize="Medium" HorizontalOptions="Start" VerticalOptions="Center"/>
+                <Label Text="Repetir el Evento?" FontSize="Medium" HorizontalOptions="Start" VerticalOptions="Center" FontAttributes="Bold"/>
                 <CheckBox IsChecked="{Binding isEventRepeat}" HorizontalOptions="FillAndExpand"></CheckBox>
             </StackLayout>
             <StackLayout IsVisible="{Binding isEventRepeat}">
-                <Label Text="Tipo de Cantidad" FontSize="Medium" />
+                <Label Text="Tipo de Cantidad" FontSize="Medium" FontAttributes="Bold"/>
                 <Picker x:Name="SelectQuantityType" Title="Selectionar Tipo de Cantidad" SelectedItem="{Binding QuantityType}" SelectedIndex="{Binding IndexQuantity}" >
                     <Picker.Items>
                         <x:String>Dias</x:String>
@@ -52,12 +53,12 @@
                         <x:String>Años</x:String>
                     </Picker.Items>
                 </Picker>
-                <Label Text="Cantidad" FontSize="Medium" />
+                <Label Text="Cantidad" FontSize="Medium" FontAttributes="Bold"/>
                 <Entry x:Name="Quantity" Text="{Binding Quantity}" FontSize="Medium" Keyboard="Numeric"/>
             </StackLayout>
             <StackLayout Orientation="Horizontal">
-                <Button Text="Cancel" Command="{Binding CancelCommand}" HorizontalOptions="FillAndExpand"></Button>
-                <Button Text="Save" Command="{Binding SaveCommand}" HorizontalOptions="FillAndExpand"></Button>
+                <Button Text="Cancelar" Command="{Binding CancelCommand}" HorizontalOptions="FillAndExpand"></Button>
+                <Button Text="Guardar" Command="{Binding SaveCommand}" HorizontalOptions="FillAndExpand"></Button>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

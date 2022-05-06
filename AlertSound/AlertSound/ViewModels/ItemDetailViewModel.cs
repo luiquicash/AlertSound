@@ -21,6 +21,7 @@ namespace AlertSound.ViewModels
         private int quantity;
         private string quantityType;
 
+        #region Properties
         public string Id { get; set; }
         public string StatusStr
         {
@@ -89,6 +90,7 @@ namespace AlertSound.ViewModels
                 LoadItemId(value);
             }
         }
+        #endregion
 
         public async void LoadItemId(string itemId)
         {
@@ -116,7 +118,6 @@ namespace AlertSound.ViewModels
                 Debug.WriteLine("Failed to Load Item");
             }
         }
-
         private string GetSoundsByValue(string itemValue)
         {
             string output = string.Empty;

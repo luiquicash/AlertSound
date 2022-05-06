@@ -13,6 +13,7 @@ namespace AlertSound.ViewModels
         private Events _selectedItem;
         private Events _updateItem;
         private Events _deletedItem;
+
         public ObservableCollection<Events> Items { get; }
         public Command LoadItemsCommand { get; }
         public Command AddItemCommand { get; }
@@ -56,7 +57,6 @@ namespace AlertSound.ViewModels
                 IsBusy = false;
             }
         }
-
         public void OnAppearing()
         {
             IsBusy = true;
@@ -96,7 +96,6 @@ namespace AlertSound.ViewModels
         {
             await Shell.Current.GoToAsync(nameof(NewItemPage));
         }
-
         private async void OnDeleteItem(Events item)
         {
             if (item == null)
@@ -105,7 +104,6 @@ namespace AlertSound.ViewModels
             await App.Data.DeleteEventAsync(item.Id);
             await ExecuteLoadItemsCommand();
         }
-
         private async void OnEditItem(Events item)
         {
             if (item == null)
@@ -113,8 +111,7 @@ namespace AlertSound.ViewModels
 
             await Shell.Current.GoToAsync($"{nameof(EditItemPage)}?{nameof(EditItemViewModel.ItemId)}={item.Id}");
         }
-
-        async void OnItemSelected(Events item)
+        private async void OnItemSelected(Events item)
         {
             if (item == null)
                 return;

@@ -43,6 +43,7 @@ namespace AlertSound.ViewModels
                 (_, __) => SaveCommand.ChangeCanExecute();
         }
 
+        #region Properties
         public string Text
         {
             get => text;
@@ -113,6 +114,8 @@ namespace AlertSound.ViewModels
             get => quantityType;
             set => SetProperty(ref quantityType, value);
         }
+        #endregion
+
         public DateTime FromMinimumDate { get; }
         public DateTime ToMinimumDate { get; set; }
         public Command SaveCommand { get; }
@@ -120,12 +123,19 @@ namespace AlertSound.ViewModels
         public Command PlayCommand { get; }
         public Command StopCommand { get; }
 
-
+        private string GetSoundsByName(string itemName)
+        {
+            string output = string.Empty;
+            var response = App.Data.GetSoundsList().FirstOrDefault(x => x.Name == itemName);
+            if (response != null)
+                return response.Value;
+            else
+                return output;
+        }
         private bool ValidateSave()
         {
             return !string.IsNullOrWhiteSpace(text);
         }
-
         private void PlaySound()
         {
             if (string.IsNullOrWhiteSpace(SoundSelected))
@@ -165,6 +175,8 @@ namespace AlertSound.ViewModels
                 Description = Description,
                 isEventRepeat = isEventRepeat,
                 Status = true,
+                Resume = 5,
+                IsResume = false
             };
 
             if (isEventRepeat)
@@ -177,15 +189,6 @@ namespace AlertSound.ViewModels
 
             // This will pop the current page off the navigation stack
             await Shell.Current.GoToAsync("..");
-        }
-        private string GetSoundsByName(string itemName)
-        {
-            string output = string.Empty;
-            var response = App.Data.GetSoundsList().FirstOrDefault(x => x.Name == itemName);
-            if (response != null)
-                return response.Value;
-            else
-                return output;
         }
     }
 }

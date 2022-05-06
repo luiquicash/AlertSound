@@ -50,5 +50,8 @@
     <Compile Update="Views\EditItemPage.xaml.cs">
       <DependentUpon>EditItemPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\AlertPage.xaml.cs">
+      <DependentUpon>AlertPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

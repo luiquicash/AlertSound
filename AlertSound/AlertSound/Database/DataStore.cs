@@ -1,11 +1,13 @@
 ﻿using AlertSound.Constants;
 using AlertSound.Models;
 using SQLite;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace AlertSound.Database
 {
@@ -50,6 +52,12 @@ namespace AlertSound.Database
         public async Task<IEnumerable<Events>> GetEventListsAsync(bool forceRefresh = false)
         {
             var listEvents = await _database.Table<Events>().ToListAsync();
+            return await Task.FromResult(listEvents);
+        }
+
+        public async Task<List<Events>> GetEventListsByDayAsync(DateTime day)
+        {
+            var listEvents = await _database.Table<Events>().Where(x => x.From >= day && x.To <= day).ToListAsync();
             return await Task.FromResult(listEvents);
         }
 
@@ -115,6 +123,31 @@ namespace AlertSound.Database
             var audio = Plugin.SimpleAudioPlayer.CrossSimpleAudioPlayer.Current;
             audio.Load(audioStream);
             audio.Play();
+        }
+
+        public void PlayAlarm(Events item)
+        {
+            var assembly = typeof(App).GetTypeInfo().Assembly;
+            Stream audioStream = assembly.GetManifestResourceStream(item.SoundSelected);
+            var audio = Plugin.SimpleAudioPlayer.CrossSimpleAudioPlayer.Current;
+            audio.Load(audioStream);
+
+            Timer aTimer = new Timer();
+            aTimer.Elapsed += delegate
+            {
+                if (!item.IsStoped)
+                {
+                    audio.Play();
+                }
+            };
+
+            var secondStr = audio.Duration > 0 && audio.Duration.ToString().Contains(",") ? audio.Duration.ToString().Split(',')[0] : audio.Duration.ToString();
+            var second = Convert.ToDouble(secondStr);
+            var miliseconde = second * 1000;
+
+            aTimer.Interval = miliseconde;
+            aTimer.Enabled = true;
+            aTimer.AutoReset = true;
         }
 
         public void StopAlarm(string soundValue)

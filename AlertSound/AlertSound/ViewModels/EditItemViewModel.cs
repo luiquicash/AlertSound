@@ -45,6 +45,7 @@ namespace AlertSound.ViewModels
                 (_, __) => SaveCommand.ChangeCanExecute();
         }
 
+        #region Properties
         public string Id { get; set; }
         public string Text
         {
@@ -128,10 +129,10 @@ namespace AlertSound.ViewModels
             get => isstopbuttonvisible;
             set => SetProperty(ref isstopbuttonvisible, value);
         }
+        #endregion
 
         public DateTime FromMinimumDate { get; }
         public DateTime ToMinimumDate { get; set; }
-
         public Command SaveCommand { get; }
         public Command CancelCommand { get; }
         public Command PlayCommand { get; }
@@ -140,35 +141,6 @@ namespace AlertSound.ViewModels
         private bool ValidateSave()
         {
             return !string.IsNullOrWhiteSpace(text);
-        }
-        private async void OnCancel()
-        {
-            // This will pop the current page off the navigation stack
-            await Shell.Current.GoToAsync("..");
-        }
-        private async void OnUpdate()
-        {
-            var item = await App.Data.GetEventAsync(itemId);
-
-            item.Text = Text;
-            item.From = From;
-            item.To = To;
-            item.EventHour = EventHour;
-            item.Description = Description;
-            item.SoundSelected = GetSoundsByName(SoundSelected);
-            item.isEventRepeat = isEventRepeat;
-            item.Status = Status;
-
-            if (isEventRepeat)
-            {
-                item.Quantity = Quantity;
-                item.QuantityType = QuantityType;
-            }
-
-            await App.Data.UpdateEventAsync(item);
-
-            // This will pop the current page off the navigation stack
-            await Shell.Current.GoToAsync("..");
         }
         public async void LoadItemId(string itemId)
         {
@@ -249,6 +221,36 @@ namespace AlertSound.ViewModels
                 return index;
             else
                 return output;
+        }
+
+        private async void OnCancel()
+        {
+            // This will pop the current page off the navigation stack
+            await Shell.Current.GoToAsync("..");
+        }
+        private async void OnUpdate()
+        {
+            var item = await App.Data.GetEventAsync(itemId);
+
+            item.Text = Text;
+            item.From = From;
+            item.To = To;
+            item.EventHour = EventHour;
+            item.Description = Description;
+            item.SoundSelected = GetSoundsByName(SoundSelected);
+            item.isEventRepeat = isEventRepeat;
+            item.Status = Status;
+
+            if (isEventRepeat)
+            {
+                item.Quantity = Quantity;
+                item.QuantityType = QuantityType;
+            }
+
+            await App.Data.UpdateEventAsync(item);
+
+            // This will pop the current page off the navigation stack
+            await Shell.Current.GoToAsync("..");
         }
     }
 }
