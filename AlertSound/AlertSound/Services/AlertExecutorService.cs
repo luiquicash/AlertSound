@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace AlertSound.Services
 {
-    public static class AlertExecutor
+    public class AlertExecutorService
     {
         public static async void Excecutor()
         {
@@ -16,7 +16,7 @@ namespace AlertSound.Services
                     if (!item.Status && item.isEventRepeat)
                     {
                         var daysQuantity = DayToRepeat(item.QuantityType, item.Quantity);
-                        var activateDay = item.To.AddDays(daysQuantity);
+                        var activateDay = item.To.Date.AddDays(daysQuantity);
                         if (activateDay.Date == DateTime.Today.Date)
                         {
                             item.Status = true;
@@ -55,7 +55,6 @@ namespace AlertSound.Services
             }
         }
 
-
         #region Helpers
         private static double DayToRepeat(string type, int quantity)
         {
@@ -84,6 +83,5 @@ namespace AlertSound.Services
             return isHourToSound;
         }
         #endregion
-
     }
 }

@@ -51,13 +51,15 @@ namespace AlertSound.Database
 
         public async Task<IEnumerable<Events>> GetEventListsAsync(bool forceRefresh = false)
         {
-            var listEvents = await _database.Table<Events>().ToListAsync();
+            var listEvents = Enumerable.Empty<Events>().ToList();
+            listEvents = await _database.Table<Events>().ToListAsync();
             return await Task.FromResult(listEvents);
         }
 
         public async Task<List<Events>> GetEventListsByDayAsync(DateTime day)
         {
-            var listEvents = await _database.Table<Events>().Where(x => x.From >= day && x.To <= day).ToListAsync();
+            var listEvents = Enumerable.Empty<Events>().ToList();
+            listEvents = await _database.Table<Events>().Where(item => item.From >= day && item.To <= day).ToListAsync();
             return await Task.FromResult(listEvents);
         }
 

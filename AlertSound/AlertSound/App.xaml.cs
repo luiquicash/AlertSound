@@ -3,6 +3,7 @@ using AlertSound.Services;
 using System;
 using System.IO;
 using System.Timers;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace AlertSound
@@ -29,6 +30,7 @@ namespace AlertSound
         {
             InitializeComponent();
             MainPage = new AppShell();
+            Preferences.Set("AlarmServiceRunning", true);
         }
 
         private void onExceutorAlert(bool enable)
@@ -36,7 +38,7 @@ namespace AlertSound
             Timer aTimer = new Timer();
             aTimer.Elapsed += delegate
             {
-                AlertExecutor.Excecutor();
+                AlertExecutorService.Excecutor();
             };
 
             aTimer.Interval = 60000;
@@ -46,7 +48,7 @@ namespace AlertSound
 
         protected override void OnStart()
         {
-             onExceutorAlert(true);
+            onExceutorAlert(true);
         }
 
         protected override void OnSleep()

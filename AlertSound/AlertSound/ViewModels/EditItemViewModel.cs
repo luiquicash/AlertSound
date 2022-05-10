@@ -151,7 +151,7 @@ namespace AlertSound.ViewModels
                 Text = item.Text;
                 Description = item.Description;
                 SoundSelected = GetSoundsByValue(item.SoundSelected);
-                From = item.From;
+                From = item.From.Date;
                 To = item.To.Date;
                 EventHour = item.EventHour;
                 isEventRepeat = item.isEventRepeat;

@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlertSound.Android", "Alert
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlertSound.iOS", "AlertSound\AlertSound.iOS\AlertSound.iOS.csproj", "{4EE9CFB2-6563-4447-9B38-25A75C45A0CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlertSound", "AlertSound\AlertSound\AlertSound.csproj", "{C367C576-5877-45FE-8C4D-599E2498C3A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlertSound", "AlertSound\AlertSound\AlertSound.csproj", "{C367C576-5877-45FE-8C4D-599E2498C3A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
