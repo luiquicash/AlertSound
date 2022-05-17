@@ -1,62 +1,80 @@
 ﻿using AlertSound.Constants;
+using AlertSound.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AlertSound.Services
 {
     public class AlertExecutorService
     {
-        public static async void Excecutor()
+        public AlertExecutorService()
         {
-            var alarmToday = await App.Data.GetEventListsByDayAsync(DateTime.Today);
+        }
+
+        public (bool, Events) Excecutor(List<Events> alarmToday)
+        {
             if (alarmToday != null && alarmToday.Any())
             {
                 foreach (var item in alarmToday)
                 {
-                    if (!item.Status && item.isEventRepeat)
+                    if (!item.Status && item.IsEventRepeat)
                     {
-                        var daysQuantity = DayToRepeat(item.QuantityType, item.Quantity);
-                        var activateDay = item.To.Date.AddDays(daysQuantity);
-                        if (activateDay.Date == DateTime.Today.Date)
+                        var isRangeItem = item.IsRange && item.To != null && item.To.Value.Date > item.From.Date;
+                        double daysDifferent = 0;
+                        if (isRangeItem)
                         {
-                            item.Status = true;
-                            await App.Data.UpdateEventAsync(item);
+                            TimeSpan time = item.To.Value - item.From;
+                            daysDifferent = time.TotalDays;
                         }
-                    }
-                    else if (item.Status && item.To.Date == DateTime.Today.Date)
-                    {
-                        var isSoundNow = isHourToSound(item.EventHour);
-                        if (isSoundNow)
-                        {
-                            App.Data.PlayAlarm(item);
 
-                            if (!item.IsResume)
+                        var daysQuantity = DayToRepeat(item.QuantityType, item.Quantity);
+                        var activateDay = isRangeItem ? item.To.Value.Date.AddDays(daysQuantity) : item.From.Date.AddDays(daysQuantity);
+                        if (activateDay.Date == DateTime.Now.Date)
+                        {
+                            item.From = activateDay;
+                            if (isRangeItem)
                             {
-                                item.Status = false;
-                                item.IsResume = false;
-                                await App.Data.UpdateEventAsync(item);
+                                item.To = activateDay.AddDays(daysDifferent);
                             }
-                            else
-                            {
-                                var newHour = DateTime.Now.AddMinutes(item.Resume);
-                                item.EventHour = TimeSpan.Parse(newHour.ToString("HH:mm"));
-                                item.IsResume = true;
-                                await App.Data.UpdateEventAsync(item);
-                            }
+                            item.Status = true;
                         }
+
+                        return (false, new Events());
                     }
-                    else if (item.Status)
+                    else if (item.Status && (item.To != null && item.To.Value.Date == DateTime.Now.Date
+                                         || item.From.Date == DateTime.Now.Date && item.To is null))
                     {
-                        var isSoundNow = isHourToSound(item.EventHour);
+                        var isSoundNow = IsHourToSound(item.EventHour);
                         if (isSoundNow)
-                            App.Data.PlayAlarm(item);
+                        {
+                            item.Status = false;
+                            item.LastDayAlarmSound = DateTime.Now;
+                            UpdateAlarm(item);
+                        }
+
+                        return (true, item);
+                    }
+                    else if (item.Status && (item.LastDayAlarmSound is null
+                                         || item.LastDayAlarmSound.Value.Date != DateTime.Now.Date))
+                    {
+                        var isSoundNow = IsHourToSound(item.EventHour);
+                        if (isSoundNow)
+                        {
+                            item.LastDayAlarmSound = DateTime.Now;
+                            UpdateAlarm(item);
+                        }
+
+                        return (true, item);
                     }
                 }
             }
+
+            return (false, new Events());
         }
 
         #region Helpers
-        private static double DayToRepeat(string type, int quantity)
+        private double DayToRepeat(string type, int quantity)
         {
             double newQuantity = 0;
             switch (type)
@@ -77,10 +95,20 @@ namespace AlertSound.Services
             return newQuantity;
         }
 
-        private static bool isHourToSound(TimeSpan eventHour)
+        private bool IsHourToSound(TimeSpan eventHour)
         {
-            var isHourToSound = eventHour.Hours == DateTime.Today.Hour && eventHour.Minutes == DateTime.Today.Minute;
+            var currentDay = DateTime.Now;
+            var isHourToSound = eventHour.Hours == currentDay.Hour
+                             && (eventHour.Minutes == currentDay.AddMinutes(-1).Minute
+                             || eventHour.Minutes == currentDay.Minute
+                             || eventHour.Minutes == currentDay.AddMinutes(1).Minute);
+
             return isHourToSound;
+        }
+
+        private async void UpdateAlarm(Events item)
+        {
+            await App.Data.UpdateEventAsync(item);
         }
         #endregion
     }

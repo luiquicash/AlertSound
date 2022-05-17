@@ -25,7 +25,7 @@
           HorizontalOptions="Start" VerticalOptions="Center"/>
             <Label Text="{Binding From}" FontSize="Small" HorizontalOptions="FillAndExpand"/>
         </StackLayout>
-        <StackLayout Orientation="Horizontal">
+        <StackLayout Orientation="Horizontal" IsVisible="{Binding isRange}">
             <Label Text="Fecha Final:" FontSize="Medium" FontAttributes="Bold"
           HorizontalOptions="Start" VerticalOptions="Center"/>
             <Label Text="{Binding To}" FontSize="Small" HorizontalOptions="FillAndExpand"/>

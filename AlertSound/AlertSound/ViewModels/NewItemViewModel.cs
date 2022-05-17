@@ -1,4 +1,5 @@
-﻿using AlertSound.Models;
+﻿using AlertSound.Extensions;
+using AlertSound.Models;
 using System;
 using System.Linq;
 using Xamarin.Forms;
@@ -16,6 +17,7 @@ namespace AlertSound.ViewModels
         private TimeSpan eventHour;
 
         private bool status;
+        private bool isrange;
         private bool iseventrepeat;
 
         private int indexsound;
@@ -34,7 +36,6 @@ namespace AlertSound.ViewModels
             isStopButtonVisible = false;
             eventHour = TimeSpan.Parse(DateTime.Now.ToString("HH:mm"));
             FromMinimumDate = DateTime.Now;
-            ToMinimumDate = DateTime.Now;
             SaveCommand = new Command(OnSave, ValidateSave);
             CancelCommand = new Command(OnCancel);
             PlayCommand = new Command(PlaySound);
@@ -79,6 +80,11 @@ namespace AlertSound.ViewModels
             get => status;
             set => SetProperty(ref status, value);
         }
+        public bool isRange
+        {
+            get => isrange;
+            set => SetProperty(ref isrange, value);
+        }
         public int IndexSound
         {
             get => indexsound;
@@ -117,7 +123,6 @@ namespace AlertSound.ViewModels
         #endregion
 
         public DateTime FromMinimumDate { get; }
-        public DateTime ToMinimumDate { get; set; }
         public Command SaveCommand { get; }
         public Command CancelCommand { get; }
         public Command PlayCommand { get; }
@@ -156,7 +161,6 @@ namespace AlertSound.ViewModels
             isPlayButtonVisible = true;
             isStopButtonVisible = false;
         }
-
         private async void OnCancel()
         {
             // This will pop the current page off the navigation stack
@@ -167,19 +171,21 @@ namespace AlertSound.ViewModels
             Events newItem = new Events()
             {
                 Id = Guid.NewGuid().ToString().Replace("-", ""),
-                Text = Text,
+                Text = Text.ToAllFirstLetterInUpper(),
                 SoundSelected = GetSoundsByName(SoundSelected),
                 From = From,
-                To = To,
                 EventHour = EventHour,
-                Description = Description,
-                isEventRepeat = isEventRepeat,
+                Description = Description.ToAllFirstLetterInUpper(),
+                IsEventRepeat = isEventRepeat,
                 Status = true,
-                Resume = 5,
-                IsResume = false
+                IsRange = isRange,
+                Resume = 5
             };
 
-            if (isEventRepeat)
+            if (newItem.To != null && newItem.To.Value.Date > newItem.From.Date || newItem.IsRange)
+                newItem.To = To;
+
+            if (newItem.IsEventRepeat)
             {
                 newItem.Quantity = Quantity;
                 newItem.QuantityType = QuantityType;

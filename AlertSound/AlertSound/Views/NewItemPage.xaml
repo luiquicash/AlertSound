@@ -15,9 +15,16 @@
             <Label Text="Fecha Inicial" FontSize="Medium" FontAttributes="Bold"/>
             <DatePicker  x:Name="FromDatePicker" Date="{Binding From}" MinimumDate="{Binding FromMinimumDate}"></DatePicker>
 
-            <Label Text="Fecha Final" FontSize="Medium" FontAttributes="Bold"/>
-            <DatePicker  x:Name="ToDatePicker" Date="{Binding To}"  MinimumDate="{Binding ToMinimumDate}"></DatePicker>
-
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Es un rango de Fecha?" FontSize="Medium" HorizontalOptions="Start" VerticalOptions="Center" FontAttributes="Bold"/>
+                <CheckBox IsChecked="{Binding isRange}" HorizontalOptions="FillAndExpand"></CheckBox>
+            </StackLayout>
+            
+            <StackLayout IsVisible="{Binding isRange}">
+                <Label Text="Fecha Final" FontSize="Medium" FontAttributes="Bold"/>
+                <DatePicker  x:Name="ToDatePicker" Date="{Binding To}"  MinimumDate="{Binding From}"></DatePicker>
+            </StackLayout>
+     
             <Label Text="Hora del Evento" FontSize="Medium" FontAttributes="Bold"/>
             <TimePicker Time="{Binding EventHour}" />
 

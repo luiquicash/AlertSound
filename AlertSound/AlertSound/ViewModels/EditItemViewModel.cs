@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AlertSound.Extensions;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using Xamarin.Forms;
@@ -13,10 +14,12 @@ namespace AlertSound.ViewModels
         private string soundselected;
 
         private DateTime from;
+        private DateTime fromminday;
         private DateTime to;
         private TimeSpan eventHour;
 
         private bool status;
+        private bool isrange;
         private bool iseventrepeat;
 
         private int quantity;
@@ -27,7 +30,6 @@ namespace AlertSound.ViewModels
 
         private int indexsound;
         private int indexquantity;
-
         private string itemId;
 
         public EditItemViewModel()
@@ -35,8 +37,6 @@ namespace AlertSound.ViewModels
             isPlayButtonVisible = true;
             isStopButtonVisible = false;
             eventHour = TimeSpan.Parse(DateTime.Now.ToString("HH:mm"));
-            FromMinimumDate = DateTime.Now;
-            ToMinimumDate = DateTime.Now;
             SaveCommand = new Command(OnUpdate, ValidateSave);
             CancelCommand = new Command(OnCancel);
             PlayCommand = new Command(PlaySound);
@@ -81,6 +81,11 @@ namespace AlertSound.ViewModels
         {
             get => status;
             set => SetProperty(ref status, value);
+        }
+        public bool isRange
+        {
+            get => isrange;
+            set => SetProperty(ref isrange, value);
         }
         public bool isEventRepeat
         {
@@ -129,10 +134,13 @@ namespace AlertSound.ViewModels
             get => isstopbuttonvisible;
             set => SetProperty(ref isstopbuttonvisible, value);
         }
+        public DateTime FromMinDay
+        {
+            get => fromminday;
+            set => SetProperty(ref fromminday, value);
+        }
         #endregion
 
-        public DateTime FromMinimumDate { get; }
-        public DateTime ToMinimumDate { get; set; }
         public Command SaveCommand { get; }
         public Command CancelCommand { get; }
         public Command PlayCommand { get; }
@@ -148,13 +156,16 @@ namespace AlertSound.ViewModels
             {
                 var item = await App.Data.GetEventAsync(itemId);
                 Id = item.Id;
-                Text = item.Text;
-                Description = item.Description;
+                Text = item.Text.ToAllFirstLetterInUpper();
+                Description = item.Description.ToAllFirstLetterInUpper();
                 SoundSelected = GetSoundsByValue(item.SoundSelected);
                 From = item.From.Date;
-                To = item.To.Date;
+                FromMinDay = item.From.Date.AddDays(-1);
+                if (item.To != null)
+                    To = item.To.Value.Date;
+                isRange = item.To != null && item.To.Value.Date > item.From.Date || item.IsRange;
                 EventHour = item.EventHour;
-                isEventRepeat = item.isEventRepeat;
+                isEventRepeat = item.IsEventRepeat;
                 Status = item.Status;
                 Quantity = item.Quantity;
                 QuantityType = item.QuantityType;
@@ -222,7 +233,6 @@ namespace AlertSound.ViewModels
             else
                 return output;
         }
-
         private async void OnCancel()
         {
             // This will pop the current page off the navigation stack
@@ -232,13 +242,14 @@ namespace AlertSound.ViewModels
         {
             var item = await App.Data.GetEventAsync(itemId);
 
-            item.Text = Text;
+            item.Text = Text.ToAllFirstLetterInUpper();
             item.From = From;
-            item.To = To;
+            if (isRange)
+                item.To = To;
             item.EventHour = EventHour;
-            item.Description = Description;
+            item.Description = Description.ToAllFirstLetterInUpper();
             item.SoundSelected = GetSoundsByName(SoundSelected);
-            item.isEventRepeat = isEventRepeat;
+            item.IsEventRepeat = isEventRepeat;
             item.Status = Status;
 
             if (isEventRepeat)

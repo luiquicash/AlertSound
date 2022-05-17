@@ -45,7 +45,7 @@ namespace AlertSound
                         Device.BeginInvokeOnMainThread(() =>
                         {
                             var errormessage = new LocationErrorMessage();
-                            MessagingCenter.Send(errormessage, "LocationError");
+                            MessagingCenter.Send(errormessage, "LocationError" + ex);
                         });
                     }
                 }

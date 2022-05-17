@@ -5,16 +5,13 @@
              Title="Alarma">
 
     <StackLayout Spacing="20" Padding="15">
-        <StackLayout Orientation="Horizontal">
-            <Label Text="Titulo del Evento:" FontSize="Title" FontAttributes="Bold"
-          HorizontalOptions="Start" VerticalOptions="Center"/>
-            <Label Text="{Binding Text}" FontSize="Large" HorizontalOptions="FillAndExpand"/>
-        </StackLayout>
-        <StackLayout Orientation="Horizontal">
-            <Label Text="Descripcion del Evento:" FontSize="Title" FontAttributes="Bold"
-          HorizontalOptions="Start" VerticalOptions="Center"/>
-            <Label Text="{Binding Description}" FontSize="Large" HorizontalOptions="FillAndExpand"/>
-        </StackLayout>
+        <Label Text="Titulo del Evento:" FontSize="Title" FontAttributes="Bold"
+          HorizontalOptions="CenterAndExpand" VerticalOptions="Center"/>
+        <Label Text="{Binding Text}" FontSize="Large" HorizontalOptions="CenterAndExpand"/>
+
+        <Label Text="Descripcion del Evento:" FontSize="Title" FontAttributes="Bold"
+          HorizontalOptions="CenterAndExpand" VerticalOptions="Center"/>
+        <Label Text="{Binding Description}" FontSize="Large" HorizontalOptions="CenterAndExpand"/>
 
         <StackLayout Orientation="Horizontal">
             <Button BackgroundColor="Red" Text="Detener Alarma" Command="{Binding StopCommand}" HorizontalOptions="FillAndExpand"></Button>

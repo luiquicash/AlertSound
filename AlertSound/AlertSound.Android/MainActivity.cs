@@ -3,6 +3,7 @@ using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace AlertSound.Droid
@@ -18,6 +19,7 @@ namespace AlertSound.Droid
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+
             serviceIntent = new Intent(this, typeof(AndroidLocationService));
             SetServiceMethods();
 
@@ -30,6 +32,7 @@ namespace AlertSound.Droid
 
             LoadApplication(new App());
         }
+
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -64,13 +67,13 @@ namespace AlertSound.Droid
         private bool IsServiceRunning(System.Type cls)
         {
             ActivityManager manager = (ActivityManager)GetSystemService(Context.ActivityService);
-            foreach (var service in manager.GetRunningServices(int.MaxValue))
+            foreach (var _ in from service in manager.GetRunningServices(int.MaxValue)
+                              where service.Service.ClassName.Equals(Java.Lang.Class.FromType(cls).CanonicalName)
+                              select new { })
             {
-                if (service.Service.ClassName.Equals(Java.Lang.Class.FromType(cls).CanonicalName))
-                {
-                    return true;
-                }
+                return true;
             }
+
             return false;
         }
 
@@ -78,10 +81,7 @@ namespace AlertSound.Droid
         {
             if (requestCode == RequestCode)
             {
-                if (Android.Provider.Settings.CanDrawOverlays(this))
-                {
-
-                }
+                if (Android.Provider.Settings.CanDrawOverlays(this)) { }
             }
 
             base.OnActivityResult(requestCode, resultCode, data);

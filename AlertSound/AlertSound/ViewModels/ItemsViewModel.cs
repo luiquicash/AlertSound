@@ -20,6 +20,7 @@ namespace AlertSound.ViewModels
         public Command<Events> ItemTapped { get; }
         public Command<Events> ItemDelete { get; }
         public Command<Events> ItemUpdate { get; }
+
         public ItemsViewModel()
         {
             Title = "Lista de Alarmas";
@@ -34,7 +35,6 @@ namespace AlertSound.ViewModels
 
             ItemUpdate = new Command<Events>(OnEditItem);
         }
-
         async Task ExecuteLoadItemsCommand()
         {
             IsBusy = true;
@@ -87,7 +87,7 @@ namespace AlertSound.ViewModels
             get => _deletedItem;
             set
             {
-                SetProperty(ref _selectedItem, value);
+                SetProperty(ref _deletedItem, value);
                 OnDeleteItem(value);
             }
         }
@@ -118,6 +118,15 @@ namespace AlertSound.ViewModels
 
             // This will push the ItemDetailPage onto the navigation stack
             await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={item.Id}");
+        }
+        public async void LaunchAlarm(Events item)
+        {
+            if (item == null)
+                return;
+
+            App.Data.PlayAlarm(item, true, true);
+            // This will push the ItemDetailPage onto the navigation stack
+            await Shell.Current.GoToAsync($"{nameof(AlertPage)}?{nameof(AlertPageViewModel.ItemId)}={item.Id}");
         }
     }
 }

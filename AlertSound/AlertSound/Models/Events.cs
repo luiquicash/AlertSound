@@ -1,5 +1,6 @@
 ﻿using SQLite;
 using System;
+using System.Collections.Generic;
 
 namespace AlertSound.Models
 {
@@ -12,7 +13,8 @@ namespace AlertSound.Models
         public string SoundSelected { get; set; }
 
         public DateTime From { get; set; }
-        public DateTime To { get; set; }
+        public DateTime? To { get; set; }
+        public DateTime? LastDayAlarmSound { get; set; }
         public TimeSpan EventHour { get; set; }
 
         public int Resume { get; set; }
@@ -20,8 +22,13 @@ namespace AlertSound.Models
         public string QuantityType { get; set; }
 
         public bool Status { get; set; }
-        public bool IsResume { get; set; }
-        public bool IsStoped { get; set; }
-        public bool isEventRepeat { get; set; }
+        public bool IsRange { get; set; }
+        public bool IsEventRepeat { get; set; }
+    }
+
+    public static class ViewModelList
+    {
+        public static List<Events> staticAlarmList { get; set; }
+        public static DateTime? nextDate { get; set; }
     }
 }

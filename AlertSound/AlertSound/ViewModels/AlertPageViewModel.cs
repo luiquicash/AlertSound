@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AlertSound.Extensions;
+using System;
 using System.Diagnostics;
 using Xamarin.Forms;
 
@@ -9,7 +10,6 @@ namespace AlertSound.ViewModels
     {
         private string description;
         private string text;
-
         private string itemId;
 
         public AlertPageViewModel()
@@ -56,33 +56,33 @@ namespace AlertSound.ViewModels
             {
                 var item = await App.Data.GetEventAsync(itemId);
                 Id = item.Id;
-                Text = item.Text;
-                Description = item.Description;
+                Text = item.Text.ToAllFirstLetterInUpper();
+                Description = item.Description.ToAllFirstLetterInUpper();
             }
             catch (Exception)
             {
                 Debug.WriteLine("Failed to Load Item");
             }
         }
-
         private async void OnStop()
         {
             var item = await App.Data.GetEventAsync(itemId);
+            item.LastDayAlarmSound = DateTime.Now;
+            await App.Data.UpdateEventAsync(item);
 
             App.Data.StopAlarm(item.SoundSelected);
 
-            item.IsResume = false;
-            item.IsStoped = true;
-            await App.Data.UpdateEventAsync(item);
-
+            // This will pop the current page off the navigation stack
             await Shell.Current.GoToAsync("..");
         }
         private async void OnResume()
         {
             var item = await App.Data.GetEventAsync(itemId);
-
-            item.IsResume = true;
+            var newHour = DateTime.Now.AddMinutes(item.Resume);
+            item.EventHour = TimeSpan.Parse(newHour.ToString("HH:mm"));
             await App.Data.UpdateEventAsync(item);
+
+            App.Data.StopAlarm(item.SoundSelected);
 
             // This will pop the current page off the navigation stack
             await Shell.Current.GoToAsync("..");

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AlertSound.Extensions;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using Xamarin.Forms;
@@ -12,6 +13,7 @@ namespace AlertSound.ViewModels
         private string text;
         private string description;
         private string soundseleted;
+        private bool isrange;
         private bool isrepeatevent;
         private DateTime from;
         private DateTime to;
@@ -27,6 +29,11 @@ namespace AlertSound.ViewModels
         {
             get => status;
             set => SetProperty(ref status, value);
+        }
+        public bool isRange
+        {
+            get => isrange;
+            set => SetProperty(ref isrange, value);
         }
         public string isEventRepeatStr
         {
@@ -98,19 +105,21 @@ namespace AlertSound.ViewModels
             {
                 var item = await App.Data.GetEventAsync(itemId);
                 Id = item.Id;
-                Text = item.Text;
-                Description = item.Description;
+                Text = item.Text.ToAllFirstLetterInUpper();
+                Description = item.Description.ToAllFirstLetterInUpper();
                 SoundSelected = GetSoundsByValue(item.SoundSelected);
                 From = item.From.Date;
-                To = item.To.Date;
+                if (item.To != null)
+                    To = item.To.Value.Date;
                 Hour = item.EventHour;
-                isEventRepeat = item.isEventRepeat;
-                if (item.isEventRepeat)
+                isRange = item.To != null && item.To.Value.Date > item.From.Date || item.IsRange;
+                isEventRepeat = item.IsEventRepeat;
+                if (item.IsEventRepeat)
                 {
                     Quantity = item.Quantity;
                     QuantityType = item.QuantityType;
                 }
-                isEventRepeatStr = item.isEventRepeat ? "Si" : "No";
+                isEventRepeatStr = item.IsEventRepeat ? "Si" : "No";
                 StatusStr = item.Status ? "Activo" : "InActivo";
             }
             catch (Exception)
