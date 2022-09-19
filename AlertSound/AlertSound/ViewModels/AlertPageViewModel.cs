@@ -11,6 +11,7 @@ namespace AlertSound.ViewModels
         private string description;
         private string text;
         private string itemId;
+        private TimeSpan eventHour;
 
         public AlertPageViewModel()
         {
@@ -45,6 +46,11 @@ namespace AlertSound.ViewModels
                 LoadItemId(value);
             }
         }
+        public TimeSpan EventHour
+        {
+            get => eventHour;
+            set => SetProperty(ref eventHour, value);
+        }
         #endregion
 
         public Command ResumeCommand { get; }
@@ -57,6 +63,7 @@ namespace AlertSound.ViewModels
                 var item = await App.Data.GetEventAsync(itemId);
                 Id = item.Id;
                 Text = item.Text.ToAllFirstLetterInUpper();
+                EventHour = item.EventHour;
                 Description = item.Description.ToAllFirstLetterInUpper();
             }
             catch (Exception)

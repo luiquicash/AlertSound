@@ -20,7 +20,7 @@ namespace AlertSound.Droid
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
-            serviceIntent = new Intent(this, typeof(AndroidLocationService));
+            serviceIntent = new Intent(this, typeof(AndroidAlarmService));
             SetServiceMethods();
 
             if (Build.VERSION.SdkInt >= BuildVersionCodes.M && !Android.Provider.Settings.CanDrawOverlays(this))
@@ -42,9 +42,11 @@ namespace AlertSound.Droid
 
         void SetServiceMethods()
         {
+
+
             MessagingCenter.Subscribe<StartServiceMessage>(this, "ServiceStarted", message =>
             {
-                if (!IsServiceRunning(typeof(AndroidLocationService)))
+                if (!IsServiceRunning(typeof(AndroidAlarmService)))
                 {
                     if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
                     {
@@ -59,7 +61,7 @@ namespace AlertSound.Droid
 
             MessagingCenter.Subscribe<StopServiceMessage>(this, "ServiceStopped", message =>
             {
-                if (IsServiceRunning(typeof(AndroidLocationService)))
+                if (IsServiceRunning(typeof(AndroidAlarmService)))
                     StopService(serviceIntent);
             });
         }

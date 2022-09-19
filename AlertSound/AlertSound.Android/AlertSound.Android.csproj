@@ -63,8 +63,7 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.7.3" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AndroidLocationService.cs" />
-    <Compile Include="BootBroadcastReceiver.cs" />
+    <Compile Include="AndroidAlarmService.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="NotificationHelper.cs" />
     <Compile Include="Resources\Resource.designer.cs" />

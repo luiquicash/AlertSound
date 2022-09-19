@@ -181,8 +181,8 @@ namespace AlertSound.Database
                     audio.Play();
                 };
 
-                var secondStr = audio.Duration > 0 && audio.Duration.ToString().Contains(",") 
-                              ? audio.Duration.ToString().Split(',')[0] 
+                var secondStr = audio.Duration > 0 && audio.Duration.ToString().Contains(",")
+                              ? audio.Duration.ToString().Split(',')[0]
                               : audio.Duration.ToString();
 
                 var second = Convert.ToDouble(secondStr);

@@ -1,4 +1,5 @@
 ﻿using AlertSound.Database;
+using AlertSound.Services.Abstracts;
 using System;
 using System.IO;
 using Xamarin.Forms;
@@ -26,6 +27,9 @@ namespace AlertSound
         public App()
         {
             InitializeComponent();
+
+            DependencyService.Get<ICustomNotificationService>().Initialize();
+
             MainPage = new AppShell();
         }
 

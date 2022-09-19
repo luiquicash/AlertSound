@@ -1,4 +1,6 @@
-﻿namespace AlertSound
+﻿using System;
+
+namespace AlertSound
 {
     public class StartServiceMessage
     {
@@ -8,14 +10,20 @@
     {
     }
 
-    public class LocationMessage
+    public class ErrorMessage
     {
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
     }
 
-    public class LocationErrorMessage
+    public class AlarmMessage
     {
+        public string Title { get; set; }
+        public DateTime Date { get; set; }
+
+    }
+
+    public struct MessagesKeys
+    {
+        public const string Alarm = "AlarmToSound";
     }
 }
 

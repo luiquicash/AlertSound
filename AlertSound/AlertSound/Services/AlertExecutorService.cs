@@ -43,7 +43,9 @@ namespace AlertSound.Services
                         return (false, new Events());
                     }
                     else if (item.Status && (item.To != null && item.To.Value.Date == DateTime.Now.Date
-                                         || item.From.Date == DateTime.Now.Date && item.To is null))
+                                         || item.From.Date == DateTime.Now.Date && item.To is null)
+                                         && (item.LastDayAlarmSound is null
+                                         || item.LastDayAlarmSound.Value.Date != DateTime.Now.Date))
                     {
                         var isSoundNow = IsHourToSound(item.EventHour);
                         if (isSoundNow)

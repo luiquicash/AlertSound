@@ -119,14 +119,5 @@ namespace AlertSound.ViewModels
             // This will push the ItemDetailPage onto the navigation stack
             await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={item.Id}");
         }
-        public async void LaunchAlarm(Events item)
-        {
-            if (item == null)
-                return;
-
-            App.Data.PlayAlarm(item, true, true);
-            // This will push the ItemDetailPage onto the navigation stack
-            await Shell.Current.GoToAsync($"{nameof(AlertPage)}?{nameof(AlertPageViewModel.ItemId)}={item.Id}");
-        }
     }
 }

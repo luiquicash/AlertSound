@@ -7,8 +7,9 @@ using Xamarin.Forms;
 
 namespace AlertSound.Droid
 {
+
     [Service]
-    public class AndroidLocationService : Service
+    public class AndroidAlarmService : Service
     {
         CancellationTokenSource _cts;
         public const int SERVICE_RUNNING_NOTIFICATION_ID = 10001;
@@ -22,14 +23,14 @@ namespace AlertSound.Droid
         {
             _cts = new CancellationTokenSource();
 
-            Notification notification = new NotificationHelper().GetServiceStartedNotification();
+            var notification = new NotificationHelper().GetServiceStartedNotification();
             StartForeground(SERVICE_RUNNING_NOTIFICATION_ID, notification);
 
             Task.Run(() =>
             {
                 try
                 {
-                    var locShared = new GetLocationService();
+                    var locShared = new AlarmsService();
                     locShared.Run(_cts.Token).Wait();
                 }
                 catch (Android.OS.OperationCanceledException)
@@ -61,4 +62,3 @@ namespace AlertSound.Droid
         }
     }
 }
-

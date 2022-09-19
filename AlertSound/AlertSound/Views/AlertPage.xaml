@@ -11,6 +11,10 @@
 
         <Label Text="Descripcion del Evento:" FontSize="Title" FontAttributes="Bold"
           HorizontalOptions="CenterAndExpand" VerticalOptions="Center"/>
+        <Label Text="{Binding EventHour}" FontSize="Large" HorizontalOptions="CenterAndExpand" TextColor="Red"/>
+        
+        <Label Text="Descripcion del Evento:" FontSize="Title" FontAttributes="Bold"
+          HorizontalOptions="CenterAndExpand" VerticalOptions="Center"/>
         <Label Text="{Binding Description}" FontSize="Large" HorizontalOptions="CenterAndExpand"/>
 
         <StackLayout Orientation="Horizontal">
